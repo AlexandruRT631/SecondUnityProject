@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,8 +6,10 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float horizontalInput;
+    public float verticalInput;
     public float speed = 10.0f;
-    public float range = 10.0f;
+    public float rangeX = 10.0f;
+    public float rangeZ = 10.0f;
     public GameObject projectilePrefab;
 
     // Start is called before the first frame update
@@ -19,16 +22,31 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         horizontalInput = Input.GetAxis("Horizontal");
-        var translateValue = Vector3.right * (horizontalInput * speed * Time.deltaTime);
-        transform.Translate(translateValue);
-        if (transform.position.x < -range || transform.position.x > range)
+        verticalInput = Input.GetAxis("Vertical");
+        var translateValueX = Vector3.right * (horizontalInput * speed * Time.deltaTime);
+        var translateValueZ = Vector3.forward * (verticalInput * speed * Time.deltaTime);
+        transform.Translate(translateValueX);
+        if (transform.position.x < -rangeX || transform.position.x > rangeX)
         {
-            transform.Translate(-translateValue);
+            transform.Translate(-translateValueX);
+        }
+        transform.Translate(translateValueZ);
+        if (transform.position.z < 0 || transform.position.z > rangeZ)
+        {
+            transform.Translate(-translateValueZ);
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Instantiate(projectilePrefab, transform.position, projectilePrefab.transform.rotation);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!other.name.Contains("Food"))
+        {
+            Debug.Log("Game Over!");
         }
     }
 }
