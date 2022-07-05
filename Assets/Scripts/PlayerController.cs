@@ -41,12 +41,4 @@ public class PlayerController : MonoBehaviour
             Instantiate(projectilePrefab, transform.position, projectilePrefab.transform.rotation);
         }
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!other.name.Contains("Food"))
-        {
-            Debug.Log("Game Over!");
-        }
-    }
 }
